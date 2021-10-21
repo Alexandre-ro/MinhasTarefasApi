@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MinhasTarefasApi.Models
 {
@@ -14,7 +12,11 @@ namespace MinhasTarefasApi.Models
         public string Descricao { get; set; }
         public string Tipo { get; set; }
         public bool Concluido { get; set; }
-        public DateTime Criado  { get; set; }
-        public DateTime Atualizado { get; set; }
+        public DateTime Criado { get; set; }
+        public DateTime Atualizado { get; set; }       
+        
+        [ForeignKey("Usuario")]
+        public string UsuarioId { get; set; }
+        public ApplicationUser Usuario {get; set; }
     }
 }
