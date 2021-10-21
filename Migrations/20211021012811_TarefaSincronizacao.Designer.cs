@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MinhasTarefasApi.Database;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -9,9 +10,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MinhasTarefasApi.Migrations
 {
     [DbContext(typeof(MinhasTarefasContext))]
-    partial class MinhasTarefasContextModelSnapshot : ModelSnapshot
+    [Migration("20211021012811_TarefaSincronizacao")]
+    partial class TarefaSincronizacao
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -218,7 +220,7 @@ namespace MinhasTarefasApi.Migrations
 
             modelBuilder.Entity("MinhasTarefasApi.Models.Tarefa", b =>
                 {
-                    b.Property<int>("IdTarefaApi")
+                    b.Property<int>("IdtarefaApi")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
@@ -256,7 +258,7 @@ namespace MinhasTarefasApi.Migrations
                     b.Property<string>("UsuarioId")
                         .HasColumnType("text");
 
-                    b.HasKey("IdTarefaApi");
+                    b.HasKey("IdtarefaApi");
 
                     b.HasIndex("UsuarioId");
 
