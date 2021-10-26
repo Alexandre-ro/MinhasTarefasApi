@@ -4,7 +4,6 @@ using MinhasTarefasApi.Repositories.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace MinhasTarefasApi.Repositories
 {
@@ -21,7 +20,7 @@ namespace MinhasTarefasApi.Repositories
         {
             var query = _banco.Tarefas.Where(a => a.UsuarioId == usuario.Id).AsQueryable();
 
-            if (dataUltimaSincronizacao != null)
+            if (dataUltimaSincronizacao.ToString() == null)
             {
                 query.Where(a => a.Criado >= dataUltimaSincronizacao || a.Atualizado >= dataUltimaSincronizacao);
             }

@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MinhasTarefasApi.Database;
+using MinhasTarefasApi.Repositories;
+using MinhasTarefasApi.Repositories.Contracts;
 
 namespace MinhasTarefasApi
 {
@@ -25,6 +27,11 @@ namespace MinhasTarefasApi
                 op.UseNpgsql("Server=127.0.0.1;Port=5432;Database=tarefas;User Id=postgres;Password=private55;");
             });
             services.AddControllers();
+            
+            //Repositories
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<ITarefaRepository, TarefaRepository>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MinhasTarefasApi", Version = "v1" });
