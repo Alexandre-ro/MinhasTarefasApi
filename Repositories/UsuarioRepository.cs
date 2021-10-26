@@ -37,7 +37,7 @@ namespace MinhasTarefasApi.Repositories
 
             StringBuilder sb = new StringBuilder();
 
-            foreach (var erro in result.Errors) 
+            foreach (var erro in result.Errors)
             {
                 sb.Append(erro.Description);
             }
