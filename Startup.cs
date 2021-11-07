@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -6,11 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MinhasTarefasApi.Database;
 using MinhasTarefasApi.Models;
 using MinhasTarefasApi.Repositories;
 using MinhasTarefasApi.Repositories.Contracts;
+using System.Text;
 
 namespace MinhasTarefasApi
 {
@@ -26,36 +30,66 @@ namespace MinhasTarefasApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<MinhasTarefasContext>(op => {
+            services.AddDbContext<MinhasTarefasContext>(op =>
+            {
                 op.UseNpgsql("Server=127.0.0.1;Port=5432;Database=tarefas;User Id=postgres;Password=private55;");
             });
             services.AddControllers();
-            
+
             //Repositories
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<ITarefaRepository, TarefaRepository>();
 
             //Identity                   
-            services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<MinhasTarefasContext>();
-           
+            services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<MinhasTarefasContext>()
+                                                                 .AddDefaultTokenProviders();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("chave-api-jwt-private"))
+                };
+            });
+
+            services.AddAuthorization(auth =>
+            {
+                auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+                                         .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                                         .RequireAuthenticatedUser()
+                                         .Build());
+            });
+
             //Configuração para quando não está logado
-            services.ConfigureApplicationCookie(options => {
-                options.Events.OnRedirectToLogin = context => {
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Events.OnRedirectToLogin = context =>
+                {
                     context.Response.StatusCode = 401;
 
                     return System.Threading.Tasks.Task.CompletedTask;
                 };
             });
-            
+
             //Suprimi a validação do ModelState
-            services.Configure<ApiBehaviorOptions>(op => {
+            services.Configure<ApiBehaviorOptions>(op =>
+            {
                 op.SuppressModelStateInvalidFilter = true;
             });
 
-             services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "MinhasTarefasApi", Version = "v1" });
-            });
+            services.AddSwaggerGen(c =>
+           {
+               c.SwaggerDoc("v1", new OpenApiInfo { Title = "MinhasTarefasApi", Version = "v1" });
+           });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,9 +106,9 @@ namespace MinhasTarefasApi
 
             app.UseRouting();
 
-            app.UseAuthorization();
-
             app.UseAuthentication();
+
+            app.UseAuthorization();
 
             app.UseStatusCodePages();
 

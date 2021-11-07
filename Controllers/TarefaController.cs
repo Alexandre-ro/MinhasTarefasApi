@@ -30,6 +30,7 @@ namespace MinhasTarefasApi.Controllers
             return Ok(_tarefaRepository.Sincronizacao(tarefas));
         }
 
+        [Authorize]
         [HttpGet("modelo")]
         public ActionResult Modelo() 
         {
