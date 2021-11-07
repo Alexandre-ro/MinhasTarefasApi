@@ -6,6 +6,8 @@ using System.Collections.Generic;
 
 namespace MinhasTarefasApi.Controllers
 {
+    [Route("api/controller")]
+    [ApiController]
     public class UsuarioController : Controller
     {
         private readonly IUsuarioRepository _usuarioRepository;
