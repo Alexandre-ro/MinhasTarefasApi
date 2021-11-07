@@ -20,7 +20,7 @@ namespace MinhasTarefasApi.Repositories
         {
             var query = _banco.Tarefas.Where(a => a.UsuarioId == usuario.Id).AsQueryable();
 
-            if (dataUltimaSincronizacao.ToString() == null)
+            if (dataUltimaSincronizacao.ToString() != null)
             {
                 query.Where(a => a.Criado >= dataUltimaSincronizacao || a.Atualizado >= dataUltimaSincronizacao);
             }

@@ -2,11 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MinhasTarefasApi.Models;
 using MinhasTarefasApi.Repositories.Contracts;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MinhasTarefasApi.Controllers
 {
@@ -19,8 +15,8 @@ namespace MinhasTarefasApi.Controllers
         public UsuarioController(IUsuarioRepository usuarioRepository, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
         {
             _usuarioRepository = usuarioRepository;
-            _signInManager = signInManager;
-            _userManager = userManager;
+            _signInManager     = signInManager;
+            _userManager       = userManager;
         }
 
         public IActionResult Login([FromBody] UsuarioDTO usuarioDTO)

@@ -17,10 +17,11 @@ namespace MinhasTarefasApi.Models
         public bool Concluido { get; set; }
         public bool Excluido { get; set; }
         public DateTime Criado { get; set; }
-        public DateTime Atualizado { get; set; }               
+        public DateTime Atualizado { get; set; }
+
         [ForeignKey("Usuario")]
         public string UsuarioId { get; set; }
-        public ApplicationUser Usuario {get; set; }
+        public ApplicationUser Usuario { get; set; }
 
     }
 }
