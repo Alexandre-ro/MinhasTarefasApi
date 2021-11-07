@@ -1,11 +1,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MinhasTarefasApi.Database;
+using MinhasTarefasApi.Models;
 using MinhasTarefasApi.Repositories;
 using MinhasTarefasApi.Repositories.Contracts;
 
@@ -32,7 +35,24 @@ namespace MinhasTarefasApi
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<ITarefaRepository, TarefaRepository>();
 
-            services.AddSwaggerGen(c =>
+            //Identity                   
+            services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<MinhasTarefasContext>();
+           
+            //Configuração para quando não está logado
+            services.ConfigureApplicationCookie(options => {
+                options.Events.OnRedirectToLogin = context => {
+                    context.Response.StatusCode = 401;
+
+                    return System.Threading.Tasks.Task.CompletedTask;
+                };
+            });
+            
+            //Suprimi a validação do ModelState
+            services.Configure<ApiBehaviorOptions>(op => {
+                op.SuppressModelStateInvalidFilter = true;
+            });
+
+             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MinhasTarefasApi", Version = "v1" });
             });
@@ -53,6 +73,10 @@ namespace MinhasTarefasApi
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseAuthentication();
+
+            app.UseStatusCodePages();
 
             app.UseEndpoints(endpoints =>
             {

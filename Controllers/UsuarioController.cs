@@ -6,9 +6,9 @@ using System.Collections.Generic;
 
 namespace MinhasTarefasApi.Controllers
 {
-    [Route("api/controller")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class UsuarioController : Controller
+    public class UsuarioController : ControllerBase
     {
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -21,6 +21,7 @@ namespace MinhasTarefasApi.Controllers
             _userManager       = userManager;
         }
 
+        [HttpPost("login")]
         public IActionResult Login([FromBody] UsuarioDTO usuarioDTO)
         {
             ModelState.Remove("Nome");
@@ -49,12 +50,14 @@ namespace MinhasTarefasApi.Controllers
             }
         }
 
+        [HttpPost("")]
         public ActionResult Cadastrar([FromBody] UsuarioDTO usuarioDTO)
         {
             if (ModelState.IsValid)
             {
                 ApplicationUser usuario = new ApplicationUser();
                 usuario.FullName        = usuarioDTO.Nome;
+                usuario.UserName        = usuarioDTO.Email;
                 usuario.Email           = usuarioDTO.Email;
 
                 var resultado = _userManager.CreateAsync(usuario, usuarioDTO.Senha).Result;
