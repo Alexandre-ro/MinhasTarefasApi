@@ -10,5 +10,7 @@ namespace MinhasTarefasApi.Models
        
         [ForeignKey("UsuarioId")]
         public virtual ICollection<Tarefa> Tarefas { get; set; }
+
+        public virtual ICollection<Token> Tokens { get; set; }
     }
 }

@@ -39,6 +39,7 @@ namespace MinhasTarefasApi
             //Repositories
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<ITarefaRepository, TarefaRepository>();
+            services.AddScoped<ITokenRepository, TokenRepository>();
 
             //Identity                   
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<MinhasTarefasContext>()
@@ -47,17 +48,17 @@ namespace MinhasTarefasApi
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme             = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme             = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidateLifetime = true,
+                    ValidateAudience         = false,
+                    ValidateLifetime         = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("chave-api-jwt-private"))
+                    IssuerSigningKey         = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("chave-api-jwt-private"))
                 };
             });
 

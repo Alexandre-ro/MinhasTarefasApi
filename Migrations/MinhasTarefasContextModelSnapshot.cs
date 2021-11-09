@@ -263,6 +263,38 @@ namespace MinhasTarefasApi.Migrations
                     b.ToTable("Tarefas");
                 });
 
+            modelBuilder.Entity("MinhasTarefasApi.Models.Token", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<DateTime?>("Atualizado")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("Criado")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("ExpirationRefreshToken")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UsuarioId")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("Utilizado")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Token");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -323,9 +355,20 @@ namespace MinhasTarefasApi.Migrations
                     b.Navigation("Usuario");
                 });
 
+            modelBuilder.Entity("MinhasTarefasApi.Models.Token", b =>
+                {
+                    b.HasOne("MinhasTarefasApi.Models.ApplicationUser", "Usuario")
+                        .WithMany("Tokens")
+                        .HasForeignKey("UsuarioId");
+
+                    b.Navigation("Usuario");
+                });
+
             modelBuilder.Entity("MinhasTarefasApi.Models.ApplicationUser", b =>
                 {
                     b.Navigation("Tarefas");
+
+                    b.Navigation("Tokens");
                 });
 #pragma warning restore 612, 618
         }

@@ -158,23 +158,49 @@ namespace MinhasTarefasApi.Migrations
                 name: "Tarefas",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
+                    IdTarefaApi = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    IdTarefaApp = table.Column<int>(type: "integer", nullable: false),
                     Titulo = table.Column<string>(type: "text", nullable: true),
                     DataHora = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Local = table.Column<string>(type: "text", nullable: true),
                     Descricao = table.Column<string>(type: "text", nullable: true),
                     Tipo = table.Column<string>(type: "text", nullable: true),
                     Concluido = table.Column<bool>(type: "boolean", nullable: false),
+                    Excluido = table.Column<bool>(type: "boolean", nullable: false),
                     Criado = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Atualizado = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     UsuarioId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tarefas", x => x.Id);
+                    table.PrimaryKey("PK_Tarefas", x => x.IdTarefaApi);
                     table.ForeignKey(
                         name: "FK_Tarefas_AspNetUsers_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Token",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    RefreshToken = table.Column<string>(type: "text", nullable: true),
+                    UsuarioId = table.Column<string>(type: "text", nullable: true),
+                    Utilizado = table.Column<bool>(type: "boolean", nullable: false),
+                    Criado = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Atualizado = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    ExpirationRefreshToken = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Token", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Token_AspNetUsers_UsuarioId",
                         column: x => x.UsuarioId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -222,6 +248,11 @@ namespace MinhasTarefasApi.Migrations
                 name: "IX_Tarefas_UsuarioId",
                 table: "Tarefas",
                 column: "UsuarioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Token_UsuarioId",
+                table: "Token",
+                column: "UsuarioId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -243,6 +274,9 @@ namespace MinhasTarefasApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tarefas");
+
+            migrationBuilder.DropTable(
+                name: "Token");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

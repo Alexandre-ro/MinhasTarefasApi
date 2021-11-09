@@ -31,6 +31,13 @@ namespace MinhasTarefasApi.Repositories
             }
         }
 
+        public ApplicationUser Obter(string id)
+        {
+            var usuario = _userManager.FindByIdAsync(id).Result;
+
+            return usuario;
+        }
+
         public void Cadastrar(ApplicationUser usuario, string senha)
         {
             var result = _userManager.CreateAsync(usuario, senha).Result;
@@ -47,5 +54,7 @@ namespace MinhasTarefasApi.Repositories
                 throw new Exception($"Usuário não cadastrado! {sb.ToString()}");
             }
         }
+
+       
     }
 }

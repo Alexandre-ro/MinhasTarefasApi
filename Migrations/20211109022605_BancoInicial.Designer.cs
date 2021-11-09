@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MinhasTarefasApi.Migrations
 {
     [DbContext(typeof(MinhasTarefasContext))]
-    [Migration("20211021012811_TarefaSincronizacao")]
-    partial class TarefaSincronizacao
+    [Migration("20211109022605_BancoInicial")]
+    partial class BancoInicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -220,7 +220,7 @@ namespace MinhasTarefasApi.Migrations
 
             modelBuilder.Entity("MinhasTarefasApi.Models.Tarefa", b =>
                 {
-                    b.Property<int>("IdtarefaApi")
+                    b.Property<int>("IdTarefaApi")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
@@ -258,11 +258,43 @@ namespace MinhasTarefasApi.Migrations
                     b.Property<string>("UsuarioId")
                         .HasColumnType("text");
 
-                    b.HasKey("IdtarefaApi");
+                    b.HasKey("IdTarefaApi");
 
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("Tarefas");
+                });
+
+            modelBuilder.Entity("MinhasTarefasApi.Models.Token", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<DateTime?>("Atualizado")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("Criado")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("ExpirationRefreshToken")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UsuarioId")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("Utilizado")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Token");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -325,9 +357,20 @@ namespace MinhasTarefasApi.Migrations
                     b.Navigation("Usuario");
                 });
 
+            modelBuilder.Entity("MinhasTarefasApi.Models.Token", b =>
+                {
+                    b.HasOne("MinhasTarefasApi.Models.ApplicationUser", "Usuario")
+                        .WithMany("Tokens")
+                        .HasForeignKey("UsuarioId");
+
+                    b.Navigation("Usuario");
+                });
+
             modelBuilder.Entity("MinhasTarefasApi.Models.ApplicationUser", b =>
                 {
                     b.Navigation("Tarefas");
+
+                    b.Navigation("Tokens");
                 });
 #pragma warning restore 612, 618
         }
